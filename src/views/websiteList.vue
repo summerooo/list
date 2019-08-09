@@ -82,7 +82,7 @@ export default {
             type: 'input',
             model: 'brandName',
             label: '网站名称:',
-            placeholder: '请输入名称'
+            placeholder: '请输入'
           },
           {
             type: 'datetimerange',

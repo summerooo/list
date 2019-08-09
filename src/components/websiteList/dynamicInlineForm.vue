@@ -160,7 +160,7 @@ export default {
   .form {
     flex: 1;
     /deep/ .el-form-item__label {
-      min-width: 70px;
+      width: 75px;
     }
   }
   .formInline {
@@ -187,6 +187,9 @@ export default {
           width: auto;
         }
       }
+    }
+    /deep/ .el-input__inner {
+      padding-right: 25px
     }
     /deep/ .el-form-item:last-child {
       margin: 0px;
