@@ -1,0 +1,10 @@
+@import "https://at.alicdn.com/t/font_1341361_za2ptf3vej.css";
+[class^="list-icon"], [class*="list-icon"] {
+  font-family: "iconfont" !important;
+  
+  /* 以下内容参照第三方图标库本身的规则 */
+  font-size: inherit;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
