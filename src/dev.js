@@ -1,7 +1,7 @@
 let host = 'http://110.249.168.203:1234/'
 
 let nginx = false
-nginx = true
+// nginx = true
 
 let proxy = {
   '/api': {
