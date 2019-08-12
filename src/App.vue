@@ -4,13 +4,21 @@
   </div>
 </template>
 <script>
+import { mapMutations } from 'vuex'
 export default {
-  created() {},
+  created() {
+    this.getInfo()
+  },
   data () {
     return {
       device: null,
       kernel: null
     }
+  },
+  methods: {
+    ...mapMutations([
+      'getInfo'
+    ])
   }
 }
 </script>

@@ -8,6 +8,13 @@
           :placeholder="item.placeholder"
           clearable
         />
+        <el-input
+          v-if="item.type === 'password'"
+          show-password
+          v-model="newStructureModel[item.model]"
+          :placeholder="item.placeholder"
+          clearable
+        />
         <el-select
           v-if="item.type === 'select'"
           v-model="newStructureModel[item.model]"
@@ -128,6 +135,7 @@ export default {
     onSubmit() {
       this.$refs['isForm'].validate(valid => {
         if (valid) {
+          this.refreshData()
           this.$emit('onSubmit', this.newStructureModel)
         } else {
           return false
@@ -138,13 +146,14 @@ export default {
       this.$refs['isForm'].resetFields()
     },
     refreshData () {
-      this.$refs['isForm'].validate(valid => {
-        if (valid) {
-          this.$emit('input', this.newStructureModel)
-        } else {
-          return false
-        }
-      })
+      this.$emit('input', this.newStructureModel)
+      // this.$refs['isForm'].validate(valid => {
+      //   if (valid) {
+      //     this.$emit('input', this.newStructureModel)
+      //   } else {
+      //     return false
+      //   }
+      // })
     },
     getData () {
       return this.newStructureModel

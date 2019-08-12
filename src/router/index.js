@@ -40,13 +40,21 @@ const layout = {
 const index = {
   path: '',
   name: 'index',
-  redirect: '/websiteList'
+  redirect: '/login'
 }
+const other = [
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('../views/login.vue'),
+  }
+]
 
 export default new Router({
   // mode: 'history',
   routes: [
     index,
-    layout
+    layout,
+    ...other
   ]
 })

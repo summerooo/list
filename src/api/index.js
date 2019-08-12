@@ -1,14 +1,18 @@
 import axios from 'axios'
 // import Qs from 'qs'
 import { Message } from 'element-ui'
+import Router from '../router'
+import store from '../store/index'
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 axios.defaults.timeout = 100000
 
 axios.interceptors.request.use(
   config => {
-    // if (config.method === 'post') {
-    //   config.data = Qs.stringify(config.data)
-    // }
+    if (store.state.info !== null) {
+      config.headers.token = store.state.info.token
+    } else {
+      config.headers.token = null
+    }
     return config
   },
   err => {
@@ -27,8 +31,10 @@ axios.interceptors.response.use(
           })
         }
         return response
-      }
-      else {
+      } else {
+        if (response.data.errno === 4105 || response.data.errno === 4004) {
+          Router.replace({name: 'login'})
+        }
         Message({
           showClose: true,
           message: response.data.errmsg
