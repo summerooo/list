@@ -2,6 +2,7 @@
   <div class="historicalRankingContainer">
     <div class="historicalRankingContent">
       <el-popover
+        v-if="chartData.rows.length"
         placement="bottom-start"
         width="400"
         trigger="manual"
@@ -28,7 +29,8 @@
         </div>
         <el-button slot="reference"  @click="visible = true">{{activeScreeningOption.label}}</el-button>
       </el-popover>
-      <ve-line :data="chartData"></ve-line>
+      <div v-if="!chartData.rows.length">暂无数据</div>
+      <ve-line :data="chartData" v-else></ve-line>
     </div>
   </div>
 </template>
