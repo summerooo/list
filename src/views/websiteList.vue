@@ -126,7 +126,7 @@ export default {
         { prop: 'name', label: '网站名称' },
         { prop: 'url', label: '打开链接' },
         { prop: 'CreateTime', label: '发布时间', width: '160', sortable: true  },
-        { prop: 'page', label: '当前页数', width: '100', sortable: true  },
+        { prop: 'Npage', label: '当前页数', width: '100', sortable: true  },
         { prop: 'top', label: '当前排名', width: '100', sortable: true },
         { prop: 'vary', label: '升降情况', width: '100', other: true },
         { label: '操作', width: '170', contain: [{label: '查看历史排名'}, {label: '编辑', style: 'color: #E6A23C'}, {label: '删除', style: 'color: #F56C6C'}] }
