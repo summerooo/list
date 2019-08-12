@@ -23,7 +23,6 @@
     </div>
     <div style="margin-top:40px;text-align:center">
       <el-pagination
-        @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page.sync="currentPage"
         :page-size="pageSize"
@@ -124,7 +123,7 @@ export default {
       basicControlModel: {},
       // table 的结构
       tableStructure: [
-        { prop: 'name', label: '网站名称', sortable: true },
+        { prop: 'name', label: '网站名称' },
         { prop: 'url', label: '打开链接' },
         { prop: 'CreateTime', label: '发布时间', width: '160', sortable: true  },
         { prop: 'page', label: '当前页数', width: '100', sortable: true  },
@@ -209,6 +208,7 @@ export default {
       }
     },
     onSubmit (model) {
+      // 格式数据基础搜索  数据
       let params = {
         star_time: model['releaseTime'].length ? model['releaseTime'][0] : '',
         end_time: model['releaseTime'].length ? model['releaseTime'][1] : '',
@@ -217,17 +217,18 @@ export default {
         star_top: model['currentRanking'].length ? model['currentRanking'][0] : '',
         end_top: model['currentRanking'].length ? model['currentRanking'][1] : ''
       }
-      console.log(model)
       this.basicControlModel = Object.assign({}, model, params)
       this.show()
     },
     handleSelectionChange (val) {
+      // 表格选择后数据
       this.selectionData = val
     },
     operateClick (row, index, x) {
+      // 表格中按钮操作
       switch (x.label) {
         case '查看历史排名':
-          this.$router.push({name: 'historicalRanking', query: { id: row.id }})
+          this.$router.push({name: 'historicalRanking', query: { id: row.id, origin: 'websiteList' }})
           break
         case '编辑':
           this.editHandle(row, index, x)
@@ -242,17 +243,15 @@ export default {
       if (column.property === 'url') window.open(row.url)
     },
     addHandle () {
+      // 添加 dialog
       this.addAndDelData = {}
-      console.log(this.selectionData)
       this.addAndDelDialog = true
       this.addAndDelFlag = true
     },
     editHandle(row, index, x) {
+      // 编辑 dialog
       console.log(row, index, x)
       this.addAndDelData = Object.assign({}, row)
-      // for (let i in row) {
-      //   this.$set(this.addAndDelData, i, Object.assign({}, row)[i])
-      // }
       this.addAndDelDialog = true
       this.addAndDelFlag = false
     },
@@ -270,9 +269,6 @@ export default {
         if (dld) this.show()
       })
     },
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
-    },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.show()
@@ -280,11 +276,8 @@ export default {
     async dialogVisibleHandle () {
       let callbackData = null
       let addAndDelData = Object.assign({}, this.addAndDelData, this.$refs.addAndDelForm.getData())
-      if (this.addAndDelFlag) {
-        callbackData = await addListData(addAndDelData)
-      } else {
-        callbackData = await editListData(addAndDelData)
-      }
+      // dialog 中接口调用
+      callbackData = this.addAndDelFlag ? await addListData(addAndDelData) : await editListData(addAndDelData)
       console.log(callbackData)
       if (callbackData) {
         this.show()

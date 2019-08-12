@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { getHistory, postHistory } from '../api/historicalRanking'
+import { getHistory, postHistory, getHistoryArticle, postHistoryArticle } from '../api/historicalRanking'
 export default {
   props: {
     query: {
@@ -69,11 +69,24 @@ export default {
   methods: {
     async show (getOrPost = true) {
       let history = null
-      if (getOrPost) {
-        // , {id: 33}
-        history = await getHistory(Object.assign({}, this.query, { date: this.activeScreeningOption.value }))
+      if (getOrPost) {postHistoryArticle
+        switch (this.query.origin) {
+          case 'websiteList':
+            history = await getHistory(Object.assign({}, this.query, { date: this.activeScreeningOption.value }))
+            break;
+          case 'articleList':
+            history = await getHistoryArticle(Object.assign({}, this.query, { date: this.activeScreeningOption.value }))
+            break;
+        }
       } else {
-        history = await postHistory(Object.assign({}, this.query, this.activeScreeningOption, { date: '' }))
+        switch (this.query.origin) {
+          case 'websiteList':
+            history = await postHistory(Object.assign({}, this.query, this.activeScreeningOption, { date: '' }))
+            break;
+          case 'articleList':
+            history = await postHistoryArticle(Object.assign({}, this.query, { date: this.activeScreeningOption.value }))
+            break;
+        }
       }
       console.log(history)
       this.chartData.rows = []
