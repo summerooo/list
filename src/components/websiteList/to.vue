@@ -1,7 +1,7 @@
 <template>
   <div class="toContainer">
     <div class="toItem" v-for="(item, index) in structure" :key="index">
-      <el-input v-model="structureModel[index]" :placeholder="item.placeholder || '请输入'" @change="inputHandle"></el-input>
+      <el-input clearable v-model="structureModel[index]" :placeholder="item.placeholder || '请输入'" @change="inputHandle"></el-input>
       <div class="line"></div>
     </div>
   </div>

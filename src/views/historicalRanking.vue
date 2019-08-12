@@ -70,7 +70,8 @@ export default {
     async show (getOrPost = true) {
       let history = null
       if (getOrPost) {
-        history = await getHistory(Object.assign({}, this.query, { date: this.activeScreeningOption.value }, {id: 33}))
+        // , {id: 33}
+        history = await getHistory(Object.assign({}, this.query, { date: this.activeScreeningOption.value }))
       } else {
         history = await postHistory(Object.assign({}, this.query, this.activeScreeningOption, { date: '' }))
       }

@@ -88,7 +88,7 @@ export default {
   width: 100%;
   height: 100%;
   min-height: 720px;
-  min-width: 1080px;
+  min-width: 1280px;
   overflow: hidden;
   display: flex;
   .menu {

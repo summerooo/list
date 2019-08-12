@@ -11,6 +11,7 @@
         <el-button size="small" @click="delHandle(false)">批量删除</el-button>
       </div>
       <sx-min-table
+        :loading="tableLoading"
         hasSelection
         :table-structure="tableStructure"
         :table-data="tableData"
@@ -26,12 +27,13 @@
         @current-change="handleCurrentChange"
         :current-page.sync="currentPage"
         :page-size="pageSize"
-        layout="total, prev, pager, next"
+        layout="total, prev, pager, next, jumper"
         :total="total">
       </el-pagination>
     </div>
     <el-dialog
       center
+      :close-on-click-modal="false"
       v-if="addAndDelDialog"
       width="500px"
       :visible.sync="addAndDelDialog">
@@ -75,26 +77,25 @@ export default {
   },
   data() {
     return {
-      // 结构
+      // 数据基础搜索 结构
       basicControlStructure: {
         data: [
           {
             type: 'input',
-            model: 'brandName',
+            model: 'name',
             label: '网站名称:',
             placeholder: '请输入'
           },
           {
-            type: 'datetimerange',
+            // datetimerange
+            type: 'daterange',
             model: 'releaseTime',
             label: '发布时间:',
-            placeholder: '请输入发布时间',
-            // 占位
-            structure: [{}, {}]
+            placeholder: '请输入发布时间'
           },
           {
             type: 'to',
-            model: 'releaseTime1',
+            model: 'currentPage',
             label: '当前页数:',
             placeholder: '请输入发布时间',
             // 占位
@@ -102,7 +103,7 @@ export default {
           },
           {
             type: 'to',
-            model: 'releaseTime2',
+            model: 'currentRanking',
             label: '当前排名:',
             placeholder: '请输入发布时间',
             // 占位
@@ -110,27 +111,31 @@ export default {
           },
           {
             type: 'select',
-            model: 'companyName',
-            label: '所属公司:',
+            model: 'varty',
+            label: '升降情况:',
             placeholder: '请选择',
-            options: [{ value: '1111', label: '1111' }, { value: '222', label: '222' }]
+            options: [{ value: 1, label: '升' }, { value: -1, label: '降' }]
           }
           // { type: 'daterange', model: 'submissionTime', label: '提交时间'}
         ],
         buttonGroup: ['search', 'clear']
       },
+      // 基础搜索 数据
+      basicControlModel: {},
       // table 的结构
       tableStructure: [
         { prop: 'name', label: '网站名称', sortable: true },
         { prop: 'url', label: '打开链接' },
-        { prop: 'CreateTime', label: '发布时间', sortable: true  },
-        { prop: 'page', label: '当前页数', sortable: true  },
-        { prop: 'top', label: '当前排名', sortable: true },
-        { prop: 'vary', label: '升降情况', width: '80', other: true },
+        { prop: 'CreateTime', label: '发布时间', width: '160', sortable: true  },
+        { prop: 'page', label: '当前页数', width: '100', sortable: true  },
+        { prop: 'top', label: '当前排名', width: '100', sortable: true },
+        { prop: 'vary', label: '升降情况', width: '100', other: true },
         { label: '操作', width: '170', contain: [{label: '查看历史排名'}, {label: '编辑', style: 'color: #E6A23C'}, {label: '删除', style: 'color: #F56C6C'}] }
       ],
       // table 的数据
       tableData: [],
+      // table 的加载动画
+      tableLoading: false,
       // 添加和编辑 的结构
       addAndDelStructure: {
         data: [
@@ -186,8 +191,10 @@ export default {
   },
   methods: {
     async show () {
-      let gtl = await getTableList({page: this.currentPage})
-      console.log(gtl)
+      this.tableLoading = true
+      let gtl = await getTableList(Object.assign({}, {page: this.currentPage}, this.basicControlModel))
+      this.tableLoading = false
+      if (!gtl) return
       this.tableData = gtl.data.data
       this.total = gtl.data.count
     },
@@ -202,7 +209,17 @@ export default {
       }
     },
     onSubmit (model) {
+      let params = {
+        star_time: model['releaseTime'].length ? model['releaseTime'][0] : '',
+        end_time: model['releaseTime'].length ? model['releaseTime'][1] : '',
+        star_Npage: model['currentPage'].length ? model['currentPage'][0] : '',
+        end_Npage: model['currentPage'].length ? model['currentPage'][1] : '',
+        star_top: model['currentRanking'].length ? model['currentRanking'][0] : '',
+        end_top: model['currentRanking'].length ? model['currentRanking'][1] : ''
+      }
       console.log(model)
+      this.basicControlModel = Object.assign({}, model, params)
+      this.show()
     },
     handleSelectionChange (val) {
       this.selectionData = val
@@ -257,8 +274,8 @@ export default {
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
-      this.show()
       console.log(`当前页: ${val}`);
+      this.show()
     },
     async dialogVisibleHandle () {
       let callbackData = null

@@ -8,7 +8,11 @@ const config = {
 
 // 获取table 列表数据
 export const getTableList = data => {
-  return axios.post(`${api}/web/get`, { params: data })
+  let formData = new FormData()
+  for (let i in data) {
+    formData.append(i, data[i])
+  }
+  return axios.post(`${api}/web/get`, formData)
 }
 // 增加选项
 export const addListData = data => {

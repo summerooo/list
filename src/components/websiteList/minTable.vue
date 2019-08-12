@@ -1,6 +1,7 @@
 <template>
   <el-table
-    max-height=500
+    v-loading="loading"
+    height=500
     :data="tableData"
     @selection-change="handleSelectionChange"
     @cell-click="cellClick">
@@ -65,6 +66,12 @@
 /* eslint-disable */
 export default {
   props: {
+    loading: {
+      type: Boolean,
+      default() {
+        return false
+      }
+    },
     tableData: {
       type: Array,
       default() {

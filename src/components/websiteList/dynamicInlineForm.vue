@@ -114,6 +114,7 @@ export default {
       for (let i of this.newStructure) {
         switch (i.type) {
           // case 'select':
+          //   this.$set(this.newStructureModel, i.model, this.value[i.model] || 0)
           //   break
           case 'to':
             this.$set(this.newStructureModel, i.model, this.value[i.model] || [])
@@ -168,7 +169,7 @@ export default {
     flex-wrap: wrap;
     
     /deep/ .el-input {
-      width: 110px;
+      width: 90px;
     }
     /deep/ .el-form-item {
       display: flex;
@@ -189,7 +190,7 @@ export default {
       }
     }
     /deep/ .el-input__inner {
-      padding-right: 25px
+      // padding-right: 25px
     }
     /deep/ .el-form-item:last-child {
       margin: 0px;
@@ -197,7 +198,7 @@ export default {
   }
   .formWrap {
     /deep/ .el-form-item__label {
-      min-width: 81px;
+      min-width: 100px;
     }
     /deep/ .el-form-item {
       display: flex;
