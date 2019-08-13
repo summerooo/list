@@ -75,6 +75,11 @@ export default {
       tableStructure: [
         { prop: 'name', label: '网站名称' },
         { prop: 'p_url', label: '打开链接' },
+        { prop: 'p_web', label: '官网地址' },
+        { prop: 'p_phone', label: '公司电话' },
+        { prop: 'p_address', label: '公司地址' },
+        { prop: 'jingying', label: '经营风险' },
+        { prop: 'sifa', label: '司法风险' },
         { prop: 'CreateTime', label: '发布时间', width: '160', sortable: true  },
         // { prop: 'Npage', label: '当前页数', width: '100', sortable: true  },
         // { prop: 'top', label: '当前排名', width: '100', sortable: true },
@@ -109,7 +114,7 @@ export default {
             label: '网址:',
             placeholder: '请输入网址',
             rules: [
-              { validator: validateUrl, trigger: 'blur' }
+              // { validator: validateUrl, trigger: 'blur' }
             ]
           },
           {

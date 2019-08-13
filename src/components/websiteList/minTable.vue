@@ -99,18 +99,16 @@ export default {
     filterBtn: {
       type: Function,
       default () {
-        return _ => true
+        return true
       }
     },
     formatter: {
       type: Function,
-      default () {
-        return (row, column, cellValue, index) => {
-          if (!row[column.property]) {
-            return ''
-          } else {
-            return row[column.property]
-          }
+      default (row, column, cellValue, index) {
+        if (!row[column.property]) {
+          return ''
+        } else {
+          return row[column.property]
         }
       }
     }
