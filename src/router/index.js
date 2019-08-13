@@ -26,6 +26,14 @@ const layout = {
       component: () => import('../views/articleList.vue')
     },
     {
+      path: '/companyInformation',
+      name: 'companyInformation',
+      meta: {
+        title: '公司信息列表'
+      },
+      component: () => import('../views/companyInformation.vue')
+    },
+    {
       path: '/historicalRanking',
       name: 'historicalRanking',
       props: route => ({ query: route.query }),

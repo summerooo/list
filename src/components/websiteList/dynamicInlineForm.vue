@@ -24,6 +24,15 @@
           >
           <el-option v-for="(o, i) in item.options" :key="i + newStructure.length" :label="o.label" :value="o.value" />
         </el-select>
+        <el-radio-group
+          v-if="item.type === 'radio'"
+          v-model="newStructureModel[item.model]"
+          :placeholder="item.placeholder"
+          >
+          <el-radio v-for="(o, i) in item.options" :key="i + newStructure.length" :label="o.value">
+            {{o.label}}
+          </el-radio>
+        </el-radio-group>
         <el-date-picker
           v-if="item.type === 'daterange'"
           v-model="newStructureModel[item.model]"
@@ -171,6 +180,11 @@ export default {
     flex: 1;
     /deep/ .el-form-item__label {
       width: 75px;
+    }
+    /deep/ .el-radio-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
     }
   }
   .formInline {

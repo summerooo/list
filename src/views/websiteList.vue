@@ -163,7 +163,7 @@ export default {
             label: '页码:',
             placeholder: '请输入页码数',
             rules: [
-              { required: true, message: '页码不能为空', trigger: 'change' }
+              // { required: true, message: '页码不能为空', trigger: 'change' }
             ]
           }
           // { type: 'daterange', model: 'submissionTime', label: '提交时间'}
@@ -292,8 +292,12 @@ export default {
 <style lang="scss" scoped>
 .websiteListContainer {
   width: 100%;
+  height: 100%;
   .websiteListContent {
-  background: white;
+    height: calc(100% - 110px);
+    display: flex;
+    flex-direction: column;
+    background: white;
     padding: 20px;
     .otherOperate {
       margin: 16px 0;

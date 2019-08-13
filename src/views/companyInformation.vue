@@ -1,11 +1,6 @@
 <template>
   <div class="websiteListContainer">
     <div class="websiteListContent">
-      <sx-dynamic-inline-form
-        size="small"
-        :structure="basicControlStructure"
-        @onSubmit="onSubmit"
-      />
       <div class="otherOperate">
         <el-button type="primary" size="small" @click="addHandle">添加</el-button>
         <el-button size="small" @click="delHandle(false)">批量删除</el-button>
@@ -54,7 +49,7 @@
 <script>
 import sxDynamicInlineForm from '../components/websiteList/dynamicInlineForm'
 import sxMinTable from '../components/websiteList/minTable'
-import { getTableList, addListData, editListData, deleteListData } from '../api/articleList'
+import { getTableList, addListData, editListData, deleteListData } from '../api/companyInformation'
 const validateUrl = (rule, value, callback) => {
   const isUrl = url => {
     const a = document.createElement('a')
@@ -76,60 +71,14 @@ export default {
   },
   data() {
     return {
-      // 数据基础搜索 结构
-      basicControlStructure: {
-        data: [
-          {
-            type: 'input',
-            model: 'name',
-            label: '文章名称:',
-            placeholder: '请输入'
-          },
-          {
-            // datetimerange
-            type: 'daterange',
-            model: 'releaseTime',
-            label: '发布时间:',
-            placeholder: '请输入发布时间'
-          },
-          {
-            type: 'to',
-            model: 'currentPage',
-            label: '当前页数:',
-            placeholder: '请输入发布时间',
-            // 占位
-            structure: [{}, {}]
-          },
-          {
-            type: 'to',
-            model: 'currentRanking',
-            label: '当前排名:',
-            placeholder: '请输入发布时间',
-            // 占位
-            structure: [{}, {}]
-          },
-          {
-            type: 'select',
-            model: 'varty',
-            label: '升降情况:',
-            placeholder: '请选择',
-            options: [{ value: 1, label: '升' }, { value: -1, label: '降' }]
-          }
-          // { type: 'daterange', model: 'submissionTime', label: '提交时间'}
-        ],
-        buttonGroup: ['search', 'clear']
-      },
-      // 基础搜索 数据
-      basicControlModel: {},
       // table 的结构
       tableStructure: [
-        { prop: 'name', label: '文章名称' },
-        { prop: 'url', label: '打开链接' },
+        { prop: 'name', label: '网站名称' },
+        { prop: 'p_url', label: '打开链接' },
         { prop: 'CreateTime', label: '发布时间', width: '160', sortable: true  },
-        { prop: 'Npage', label: '当前页数', width: '100', sortable: true  },
-        { prop: 'top', label: '当前排名', width: '100', sortable: true },
-        { prop: 'vary', label: '升降情况', width: '100', other: true },
-        { label: '操作', width: '170', contain: [{label: '查看历史排名'}, {label: '编辑', style: 'color: #E6A23C'}, {label: '删除', style: 'color: #F56C6C'}] }
+        // { prop: 'Npage', label: '当前页数', width: '100', sortable: true  },
+        // { prop: 'top', label: '当前排名', width: '100', sortable: true },
+        { label: '操作', width: '100', contain: [{label: '编辑', style: 'color: #E6A23C'}, {label: '删除', style: 'color: #F56C6C'}] }
       ],
       // table 的数据
       tableData: [],
@@ -141,32 +90,53 @@ export default {
           {
             type: 'input',
             model: 'name',
-            label: '文章名称:',
+            label: '网站名称:',
             placeholder: '请输入名称',
             rules: [
-              { required: true, message: '请输入文章名称', trigger: 'change' }
+              { required: true, message: '请输入网站名称', trigger: 'change' }
             ],
           },
           {
             type: 'input',
-            model: 'url',
+            model: 'address',
+            label: '公司地址:',
+            placeholder: '请输入公司地址',
+            rules: []
+          },
+          {
+            type: 'input',
+            model: 'c_url',
             label: '网址:',
             placeholder: '请输入网址',
             rules: [
-              { required: true, message: '网址不能为空', trigger: 'change' },
               { validator: validateUrl, trigger: 'blur' }
             ]
           },
           {
             type: 'input',
-            model: 'page',
-            label: '页码:',
-            placeholder: '请输入页码数',
+            model: 'phone',
+            label: '电话:',
+            placeholder: '请输入电话',
+            rules: []
+          },
+          {
+            type: 'input',
+            model: 'p_url',
+            label: '所在平台网址:',
+            placeholder: '请输入所在平台网址',
             rules: [
-              // { required: true, message: '页码不能为空', trigger: 'change' }
+              { validator: validateUrl, trigger: 'blur' }
+            ]
+          },
+          {
+            type: 'radio',
+            model: 'Classify',
+            label: '平台分类:',
+            options: [
+              {label: '天眼查', value: '1'},
+              {label: '企查查', value: '2'}
             ]
           }
-          // { type: 'daterange', model: 'submissionTime', label: '提交时间'}
         ]
       },
       // 添加和编辑 的数据
@@ -191,7 +161,7 @@ export default {
   methods: {
     async show () {
       this.tableLoading = true
-      let gtl = await getTableList(Object.assign({}, {page: this.currentPage}, this.basicControlModel))
+      let gtl = await getTableList(Object.assign({}, {page: this.currentPage}))
       this.tableLoading = false
       if (!gtl) return
       this.tableData = gtl.data.data
@@ -207,19 +177,6 @@ export default {
         return row[column.property]
       }
     },
-    onSubmit (model) {
-      // 格式数据基础搜索  数据
-      let params = {
-        star_time: model['releaseTime'].length ? model['releaseTime'][0] : '',
-        end_time: model['releaseTime'].length ? model['releaseTime'][1] : '',
-        star_Npage: model['currentPage'].length ? model['currentPage'][0] : '',
-        end_Npage: model['currentPage'].length ? model['currentPage'][1] : '',
-        star_top: model['currentRanking'].length ? model['currentRanking'][0] : '',
-        end_top: model['currentRanking'].length ? model['currentRanking'][1] : ''
-      }
-      this.basicControlModel = Object.assign({}, model, params)
-      this.show()
-    },
     handleSelectionChange (val) {
       // 表格选择后数据
       this.selectionData = val
@@ -227,9 +184,6 @@ export default {
     operateClick (row, index, x) {
       // 表格中按钮操作
       switch (x.label) {
-        case '查看历史排名':
-          this.$router.push({name: 'historicalRanking', query: { id: row.id, origin: 'articleList' }})
-          break
         case '编辑':
           this.editHandle(row, index, x)
           break
@@ -240,7 +194,7 @@ export default {
       console.log(row, index, x)
     },
     cellClick (row, column) {
-      if (column.property === 'url') window.open(row.url)
+      if (column.property === 'p_url') window.open(row.p_url)
     },
     addHandle () {
       // 添加 dialog
@@ -291,13 +245,13 @@ export default {
 
 <style lang="scss" scoped>
 .websiteListContainer {
-  width: 100%;
   height: 100%;
+  width: 100%;
   .websiteListContent {
-    background: white;
     height: calc(100% - 110px);
     display: flex;
     flex-direction: column;
+    background: white;
     padding: 20px;
     .otherOperate {
       margin: 16px 0;

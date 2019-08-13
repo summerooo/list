@@ -1,7 +1,7 @@
 <template>
   <el-table
     v-loading="loading"
-    height=500
+    height=100%
     :data="tableData"
     @selection-change="handleSelectionChange"
     @cell-click="cellClick">
