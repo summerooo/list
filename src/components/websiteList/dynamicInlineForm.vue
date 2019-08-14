@@ -1,6 +1,7 @@
 <template>
   <div class="container">
-    <el-form ref="isForm"  :model="newStructureModel" :class="{form: true, formInline: !wrap, formWrap: wrap}" :size="size">
+    <!-- @submit.native.prevent -->
+    <el-form ref="isForm" @submit.native.prevent="onSubmit" :model="newStructureModel" :class="{form: true, formInline: !wrap, formWrap: wrap}" :size="size">
       <el-form-item v-for="(item, index) in newStructure" :key="index" :label="item.label" :prop="item.model" :rules="item.rules">
         <el-input
           v-if="item.type === 'input'"

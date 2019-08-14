@@ -36,6 +36,7 @@
         v-model="addAndEditData"
         wrap
         size="small"
+        @onSubmit="dialogVisibleHandle"
         :structure="addAndEditStructure"
       />
       <span slot="footer" class="dialog-footer">
