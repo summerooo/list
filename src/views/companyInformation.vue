@@ -80,6 +80,7 @@ export default {
         { prop: 'p_address', label: '公司地址' },
         { prop: 'jingying', label: '经营风险' },
         { prop: 'sifa', label: '司法风险' },
+        { prop: 'Classify', label: '数据来源' },
         { prop: 'CreateTime', label: '发布时间', width: '160', sortable: true  },
         // { prop: 'Npage', label: '当前页数', width: '100', sortable: true  },
         // { prop: 'top', label: '当前排名', width: '100', sortable: true },
@@ -179,6 +180,10 @@ export default {
       } else {
         if (column.property === 'CreateTime')
           return new Date(parseInt(row[column.property]) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ')
+        if (column.property === 'Classify') {
+          if (parseInt(row[column.property]) === 1) return '天眼查'
+          if (parseInt(row[column.property]) === 2) return '企查查'
+        }
         return row[column.property]
       }
     },
