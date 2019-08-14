@@ -34,6 +34,14 @@ const layout = {
       component: () => import('../views/companyInformation.vue')
     },
     {
+      path: '/keyWord',
+      name: 'keyWord',
+      meta: {
+        title: '关键词'
+      },
+      component: () => import('../views/keyWord.vue')
+    },
+    {
       path: '/historicalRanking',
       name: 'historicalRanking',
       props: route => ({ query: route.query }),
