@@ -39,11 +39,11 @@
       width="500px"
       :visible.sync="addAndEditDialog">
       <sx-dynamic-inline-form
-        ref="addAndDelForm"
-        v-model="addAndDelData"
+        ref="addAndEditForm"
+        v-model="addAndEditData"
         wrap
         size="small"
-        :structure="addAndDelStructure"
+        :structure="addAndEditStructure"
       />
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogVisibleHandle">确 定</el-button>
@@ -91,7 +91,7 @@ export default {
         rows: []
       },
       addAndEditDialog: false,
-      addAndDelStructure: {
+      addAndEditStructure: {
         data: [
           {
             type: 'input',
@@ -112,7 +112,7 @@ export default {
           }
         ]
       },
-      addAndDelData: {},
+      addAndEditData: {},
       visible: false,
       screeningOption: null,
       activeScreeningOption: null,
@@ -171,19 +171,19 @@ export default {
     },
     openExplain (e) {
       this.explainIndex = e.dataIndex
-      this.addAndDelData = Object.assign({}, { currentExplain: this.chartData.rows[e.dataIndex].explain1 })
+      this.addAndEditData = Object.assign({}, { currentExplain: this.chartData.rows[e.dataIndex].explain1 })
       this.addAndEditDialog = true
     },
     async dialogVisibleHandle () {
       // webUpdateexplain
-      this.$refs.addAndDelForm.refreshData()
+      this.$refs.addAndEditForm.refreshData()
       let explain
       switch (this.query.origin) {
         case 'websiteList':
-          explain = await webUpdateexplain(Object.assign({}, this.chartData.rows[this.explainIndex], this.addAndDelData))
+          explain = await webUpdateexplain(Object.assign({}, this.chartData.rows[this.explainIndex], this.addAndEditData))
           break;
         case 'articleList':
-          explain = await articleUpdateexplain(Object.assign({}, this.chartData.rows[this.explainIndex], this.addAndDelData))
+          explain = await articleUpdateexplain(Object.assign({}, this.chartData.rows[this.explainIndex], this.addAndEditData))
           break;
       }
       if (!explain) return

@@ -37,11 +37,11 @@
       width="500px"
       :visible.sync="addAndDelDialog">
       <sx-dynamic-inline-form
-        ref="addAndDelForm"
-        v-model="addAndDelData"
+        ref="addAndEditForm"
+        v-model="addAndEditData"
         wrap
         size="small"
-        :structure="addAndDelStructure"
+        :structure="addAndEditStructure"
       />
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogVisibleHandle">确 定</el-button>
@@ -136,7 +136,7 @@ export default {
       // table 的加载动画
       tableLoading: false,
       // 添加和编辑 的结构
-      addAndDelStructure: {
+      addAndEditStructure: {
         data: [
           {
             type: 'input',
@@ -170,7 +170,7 @@ export default {
         ]
       },
       // 添加和编辑 的数据
-      addAndDelData: {},
+      addAndEditData: {},
       // 用来区分添加和编辑
       addAndDelFlag: true,
       // 添加和编辑 的弹窗
@@ -244,14 +244,14 @@ export default {
     },
     addHandle () {
       // 添加 dialog
-      this.addAndDelData = {}
+      this.addAndEditData = {}
       this.addAndDelDialog = true
       this.addAndDelFlag = true
     },
     editHandle(row, index, x) {
       // 编辑 dialog
       console.log(row, index, x)
-      this.addAndDelData = Object.assign({}, row)
+      this.addAndEditData = Object.assign({}, row)
       this.addAndDelDialog = true
       this.addAndDelFlag = false
     },
@@ -275,9 +275,9 @@ export default {
     },
     async dialogVisibleHandle () {
       let callbackData = null
-      let addAndDelData = Object.assign({}, this.addAndDelData, this.$refs.addAndDelForm.getData())
+      let addAndEditData = Object.assign({}, this.addAndEditData, this.$refs.addAndEditForm.getData())
       // dialog 中接口调用
-      callbackData = this.addAndDelFlag ? await addListData(addAndDelData) : await editListData(addAndDelData)
+      callbackData = this.addAndDelFlag ? await addListData(addAndEditData) : await editListData(addAndEditData)
       console.log(callbackData)
       if (callbackData) {
         this.show()
