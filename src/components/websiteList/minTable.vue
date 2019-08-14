@@ -28,10 +28,10 @@
       :fixed="item.fixed"
       :width="item.width"
       filter-placement="bottom-end"
-      show-overflow-tooltip
+      :show-overflow-tooltip="!item.popover"
     >
       <template slot-scope="scope">
-        <div v-if="item.contain && !item.other" style="display: flex;justify-content:space-between">
+        <div v-if="item.contain" style="display: flex;justify-content:space-between">
           <div v-for="(x, key) in item.contain" :key="key">
             <el-button
               v-if="filterBtn(scope.row, x, scope.column, scope.row[item.prop], scope.$index)"
@@ -42,7 +42,7 @@
             >{{ x.label }}</el-button>
           </div>
         </div>
-        <div v-if="!item.contain && !item.other">
+        <div v-if="!item.contain && !item.other && !item.popover">
           {{
             formatter(
               scope.row,
@@ -52,11 +52,40 @@
             )
           }}
         </div>
-        <div v-if="!item.contain && item.other" style="font-size: 20px">
+        <div v-if="item.other" style="font-size: 20px">
           <i v-if="Boolean(scope.row['vary'])" class="list-icon-arrow-up" style="color: #67C23A;"></i>
           <i v-else class="list-icon-arrow-down" style="color: #F56C6C;"></i>
           <!-- {{scope.row}} -->
         </div>
+        <el-popover v-if="item.popover" trigger="hover" placement="top"  width="500">
+          <div>
+            {{
+              formatter(
+                scope.row,
+                scope.column,
+                scope.row[item.prop],
+                scope.$index
+              )
+            }}
+          </div>
+          <div slot="reference"
+            style="
+              overflow: hidden;
+              text-overflow: ellipsis; 
+              -o-text-overflow: ellipsis;
+              white-space:nowrap;
+            "
+          >
+            {{
+              formatter(
+                scope.row,
+                scope.column,
+                scope.row[item.prop],
+                scope.$index
+              )
+            }}
+          </div>
+        </el-popover>
       </template>
     </el-table-column>
   </el-table>
