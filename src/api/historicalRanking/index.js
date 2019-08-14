@@ -30,3 +30,21 @@ export const postHistoryArticle = data => {
   }
   return axios.post(`${api}/article/tops`, formData, config)
 }
+
+// 更新历史 elplain
+export const webUpdateexplain = data => {
+  let formData = new FormData()
+  for (let i in data) {
+    formData.append(i, data[i])
+  }
+  return axios.post(`${api}/web/updateexplain`, formData, config)
+}
+
+// 更新历史 elplain
+export const articleUpdateexplain = data => {
+  let formData = new FormData()
+  for (let i in data) {
+    formData.append(i, data[i])
+  }
+  return axios.post(`${api}/article/updateexplain`, formData, config)
+}

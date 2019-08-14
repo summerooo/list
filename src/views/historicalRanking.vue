@@ -30,14 +30,36 @@
         <el-button slot="reference"  @click="visible = true">{{activeScreeningOption.label}}</el-button>
       </el-popover>
       <div v-if="!chartData.rows.length">暂无数据</div>
-      <ve-line :data="chartData" v-else></ve-line>
+      <ve-line :data="chartData" v-else :events="chartEvents"></ve-line>
     </div>
+    <el-dialog
+      center
+      :close-on-click-modal="false"
+      v-if="addAndEditDialog"
+      width="500px"
+      :visible.sync="addAndEditDialog">
+      <sx-dynamic-inline-form
+        ref="addAndDelForm"
+        v-model="addAndDelData"
+        wrap
+        size="small"
+        :structure="addAndDelStructure"
+      />
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogVisibleHandle">确 定</el-button>
+        <el-button @click="addAndEditDialog = false" style="margin-left: 30px;">取 消</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getHistory, postHistory, getHistoryArticle, postHistoryArticle } from '../api/historicalRanking'
+import sxDynamicInlineForm from '../components/websiteList/dynamicInlineForm'
+import { getHistory, postHistory, getHistoryArticle, postHistoryArticle, webUpdateexplain, articleUpdateexplain } from '../api/historicalRanking'
 export default {
+  components: {
+    sxDynamicInlineForm
+  },
   props: {
     query: {
       type: null,
@@ -47,6 +69,16 @@ export default {
     }
   },
   data() {
+    this.chartSettings = {
+      selectedMode: 'single',
+      hoverAnimation: false
+    }
+    var self = this
+    this.chartEvents = {
+      click (e) {
+        self.openExplain(e)
+      }
+    }
     return {
       btnGroup: [
         {label: '近7天', value: 7},
@@ -58,9 +90,33 @@ export default {
         columns: ['日期', '排名'],
         rows: []
       },
+      addAndEditDialog: false,
+      addAndDelStructure: {
+        data: [
+          {
+            type: 'input',
+            model: 'currentExplain',
+            label: '现有说明:',
+            disabled: true,
+            placeholder: '',
+            rules: [],
+          },
+          {
+            type: 'input',
+            model: 'explain',
+            label: '说明:',
+            placeholder: '请输入说明',
+            rules: [
+              { required: true, message: '请输入说明', trigger: 'change' }
+            ]
+          }
+        ]
+      },
+      addAndDelData: {},
       visible: false,
       screeningOption: null,
-      activeScreeningOption: null
+      activeScreeningOption: null,
+      explainIndex: 0
     }
   },
   created() {
@@ -94,7 +150,7 @@ export default {
       this.chartData.rows = []
       for (let i in history.data.data) {
         let date = new Date(parseInt(history.data.data[i]['CreateTime']) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ')
-        this.$set(this.chartData.rows, i, { 日期: date, 排名: history.data.data[i]['top'] })
+        this.$set(this.chartData.rows, i, Object.assign({}, { 日期: date, 排名: history.data.data[i]['top'] }, history.data.data[i]))
       }
       console.log(this.chartData.rows)
     },
@@ -112,6 +168,27 @@ export default {
       }
       this.visible = false
       this.date = ''
+    },
+    openExplain (e) {
+      this.explainIndex = e.dataIndex
+      this.addAndDelData = Object.assign({}, { currentExplain: this.chartData.rows[e.dataIndex].explain1 })
+      this.addAndEditDialog = true
+    },
+    async dialogVisibleHandle () {
+      // webUpdateexplain
+      this.$refs.addAndDelForm.refreshData()
+      let explain
+      switch (this.query.origin) {
+        case 'websiteList':
+          explain = await webUpdateexplain(Object.assign({}, this.chartData.rows[this.explainIndex], this.addAndDelData))
+          break;
+        case 'articleList':
+          explain = await articleUpdateexplain(Object.assign({}, this.chartData.rows[this.explainIndex], this.addAndDelData))
+          break;
+      }
+      if (!explain) return
+      this.show()
+      this.addAndEditDialog = false
     }
   }
 }

@@ -6,6 +6,7 @@
           v-if="item.type === 'input'"
           v-model="newStructureModel[item.model]"
           :placeholder="item.placeholder"
+          :disabled="item.disabled"
           clearable
         />
         <el-input
