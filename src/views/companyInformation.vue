@@ -221,7 +221,10 @@ export default {
     },
     delHandle (value) {
       console.log(value)
-      if (value) this.selectionData.push(value)
+      if (value) {
+        this.selectionData = []
+        this.selectionData.push(value)
+      }
       console.log(this.selectionData)
       if (!this.selectionData.length) return this.$message({ type: 'info', message: '未选择' })
       this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
