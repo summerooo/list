@@ -61,6 +61,8 @@ export default {
       // table 的结构
       tableStructure: [
         { prop: 'name', label: '名称' },
+        { prop: 'g', label: '搜索结果1' },
+        { prop: 'q', label: '搜索结果2' },
         { label: '操作', width: '100', contain: [{label: '编辑', style: 'color: #E6A23C'}, {label: '删除', style: 'color: #F56C6C'}] }
       ],
       // table 的数据
