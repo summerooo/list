@@ -8,7 +8,6 @@ export default new Vuex.Store({
     info: null
   },
   mutations: {
-    // store.commit('setInfo', '??')
     setInfo (state, data) {
       sessionStorage.setItem('info', JSON.stringify(data))
       state.info = data
